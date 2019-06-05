@@ -1,6 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from io import BytesIO
 
+
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -15,10 +16,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         response = BytesIO()
         response.write(b'This is POST request. ')
-        response.write(b'Receied: ')
+        response.write(b'Received: ')
         response.write(body)
         self.wfile.write(response.getvalue())
-
 
 
 httpd = HTTPServer(('localhost', 8081), BaseHTTPRequestHandler)
