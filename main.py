@@ -19,8 +19,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         response.write(b'Received: ')
         response.write(body)
         self.wfile.write(response.getvalue())
+        print(body)
 
 
-httpd = HTTPServer(('localhost', 8081), BaseHTTPRequestHandler)
+httpd = HTTPServer(('51.83.42.157', 8081), SimpleHTTPRequestHandler)
 
 httpd.serve_forever()
