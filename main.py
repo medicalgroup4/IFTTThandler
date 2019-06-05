@@ -26,7 +26,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
         mqtt = MQTT(ip="51.83.42.157", port=1883, qos=2, mode=Message_mode.NON_BLOCKING)
         mqtt.connect()
-        m = Message(str(body))
+        m = Message.from_string(str(body))
         mqtt.publish("test", m)
         mqtt.disconnect()
 
