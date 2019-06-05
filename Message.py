@@ -67,6 +67,6 @@ class Message:
         string = ""
         add_to_string = [self.id, self.patient_name, self.severity, self.location, self.message]
         for i in range(len(add_to_string)):
-            string = string + str(add_to_string[i]) + self.__DELIMITE
+            string = string + str(add_to_string[i]) + self.__DELIMITER
 
         return string[:-1]  # return all but last character
