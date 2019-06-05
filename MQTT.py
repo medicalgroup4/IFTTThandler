@@ -1,6 +1,6 @@
 import paho.mqtt.client as mqtt
 from Message import Message
-from typing import List, Tuple, Callable
+from typing import List, Tuple
 from enum import Enum
 import socket
 
@@ -48,7 +48,7 @@ class MQTT:
         self._ip = ip
         self._port = port
         self._qos = qos
-        self._topics: List[Tuple[str, int]] = []
+        self._topics = []
         self._mode = mode
 
         self._client = mqtt.Client('', True, None, mqtt.MQTTv31)
