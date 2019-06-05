@@ -1,5 +1,8 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from io import BytesIO
+import sys
+from MQTT import *
+from Message import *
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -20,6 +23,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         response.write(body)
         self.wfile.write(response.getvalue())
         print(body)
+
+        mqtt = MQTT(ip="51.83.42.157", port=1883, qos=2, mode=Message_mode.NON_BLOCKING)
+        mqtt.connect()
+        m = Message(str(body))
+        mqtt.publish("test", m)
+        mqtt.disconnect()
 
 
 httpd = HTTPServer(('51.83.42.157', 8081), SimpleHTTPRequestHandler)
