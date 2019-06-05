@@ -43,7 +43,7 @@ class MQTT:
         if ip is None or ip == "":
             raise ValueError(self.__ERROR_INVALID_IP)
 
-        self.message_callback: Callable[[str, str], None] = None
+        self.message_callback = None
 
         self._ip = ip
         self._port = port
