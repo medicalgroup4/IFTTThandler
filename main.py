@@ -29,7 +29,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         mes = body.decode("utf-8")
         print("decoded: ", mes)
         m = Message.from_string(mes)
-        mqtt.publish("test", m)
+        mqtt.publish("database/message", m)
         mqtt.disconnect()
 
 
