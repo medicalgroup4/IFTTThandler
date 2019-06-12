@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 from Message import Message
+from Measurement import Measurement
 from typing import List, Tuple
 from enum import Enum
 import socket
@@ -13,7 +14,7 @@ class Message_mode(Enum):
     NON_BLOCKING = 1
 
 
-# MQTT Class
+# MQTT Class Version 0.17
 # wrapper around the paho mqtt library to make life a bit easier.
 class MQTT:
     # error messages:
@@ -63,11 +64,11 @@ class MQTT:
     def connect(self) -> None:
         try:
             self._client.connect(self._ip, self._port)
+            self._connected = True
             if self._mode == Message_mode.NON_BLOCKING:
                 self._client.loop_start()
             elif self._mode == Message_mode.BLOCKING:
                 self._client.loop_forever()
-            self._connected = True
         except socket.gaierror as err:
             raise ValueError(self.__ERROR_COULD_NOT_CONNECT % (self._ip, self._port))
 
@@ -100,12 +101,25 @@ class MQTT:
     # function to publish a message, once a connection has been made
     # topic (string): topic to publish to
     # message (Message): message to send
-    def publish(self, topic: str, message: Message) -> None:
+    def publish_message(self, topic: str, message: Message) -> None:
         if topic is None or len(topic) == 0:
             raise ValueError(self.__ERROR_INVALID_TOPIC_NAME)
 
         if (self._connected):
             self._client.publish(topic, str(message))
+        else:
+            raise Exception(self.__ERROR_PUBLISH_WHILE_NOT_CONNECTED)
+    
+
+    # function to publish a measurement, once a connection has been made
+    # topic (string): topic to publish to
+    # measurement (Measurement): measurement to send
+    def publish_measurement(self, topic: str, measurement: Measurement) -> None:
+        if topic is None or len(topic) == 0:
+            raise ValueError(self.__ERROR_INVALID_TOPIC_NAME)
+
+        if (self._connected):
+            self._client.publish(topic, str(measurement))
         else:
             raise Exception(self.__ERROR_PUBLISH_WHILE_NOT_CONNECTED)
 
@@ -116,7 +130,6 @@ class MQTT:
 
     # function which runs on connection with a broker
     def __on_connect(self, client, userdata, flags, rc):
-        print("test")
         if rc == 0:
             self._log(self.__LOG_BROKER_CONNECT % self._ip)
             self._client.subscribe(self._topics)
@@ -138,6 +151,9 @@ class MQTT:
         m_decode = str(message_raw.payload.decode("utf-8", "strict"))
         self._log(self.__LOG_MESSAGE_RECEIVED % (m_decode, topic))
         if self.message_callback != None:
-            message_object = Message.from_string(m_decode)
-
-            self.message_callback(topic, message_object)
+            obj = None
+            if Message.is_str_message(m_decode):
+                obj = Message.from_string(m_decode)
+            elif Measurement.is_str_measurement(m_decode):
+                obj = Measurement.from_string(m_decode)
+            self.message_callback(topic, obj)
