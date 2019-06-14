@@ -1,4 +1,4 @@
-# Message class Version 0.12
+# Message class Version 0.13
 # Handy class for handling messages sent via the broker.
 # 
 # Can convert received messages into an instance of this class
@@ -23,7 +23,7 @@ class Message:
             raise ValueError("No '%s' allowed in messages" % self.__DELIMITER)
         
         self.id = id
-        self.patient_name = patient_name
+        self.patient_id = patient_id
         self.severity = severity
         self.location = location
         self.message = message
