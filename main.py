@@ -32,7 +32,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             mqtt.publish_message("database/message", m)
             print("sent message to broker")
         else:
-            mqtt.publish_string("basestation/startmeasurement", m)
+            mqtt.publish_string("basestation/startmeasurement", mes)
             print("sent measurement start command to broker")
         mqtt.disconnect()
 
