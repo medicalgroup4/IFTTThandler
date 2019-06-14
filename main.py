@@ -27,8 +27,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         mqtt.connect()
         mes = body.decode("utf-8")
         print("decoded: ", mes)
-        m = Message.from_string(mes)
-        mqtt.publish_message("database/message", m)
+        if Message.is_str_message(mes):
+            m = Message.from_string(mes)
+            mqtt.publish_message("database/message", m)
+            print("sent message to broker")
+        else:
+            mqtt.publish_string("basestation/startmeasurement", m)
+            print("sent measurement start command to broker")
         mqtt.disconnect()
 
 

@@ -14,7 +14,7 @@ class Message_mode(Enum):
     NON_BLOCKING = 1
 
 
-# MQTT Class Version 0.17
+# MQTT Class Version 0.18
 # wrapper around the paho mqtt library to make life a bit easier.
 class MQTT:
     # error messages:
@@ -120,6 +120,18 @@ class MQTT:
 
         if (self._connected):
             self._client.publish(topic, str(measurement))
+        else:
+            raise Exception(self.__ERROR_PUBLISH_WHILE_NOT_CONNECTED)
+    
+    # function to publish a string, once a connection has been made
+    # topic (string): topic to publish to
+    # message (string): string to send
+    def publish_string(self, topic: str, message: str):
+        if topic is None or len(topic) == 0:
+            raise ValueError(self.__ERROR_INVALID_TOPIC_NAME)
+
+        if (self._connected):
+            self._client.publish(topic, message)
         else:
             raise Exception(self.__ERROR_PUBLISH_WHILE_NOT_CONNECTED)
 
