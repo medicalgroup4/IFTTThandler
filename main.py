@@ -26,7 +26,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         mqtt = MQTT(ip="51.83.42.157", port=1883, qos=2, mode=Message_mode.NON_BLOCKING)
         mqtt.connect()
         mes = body.decode("utf-8")
-        print("decoded: ", mes)
+        print("decoded:", mes)
+        
         if Message.is_str_message(mes):
             m = Message.from_string(mes)
             mqtt.publish_message("database/message", m)

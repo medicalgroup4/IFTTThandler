@@ -62,7 +62,8 @@ class Message:
     def is_str_message(self, string:str) -> bool:
         try:
             Message.from_string(string)
-        except:
+        except Exception as e:
+            print(e)
             return False
         else:
             return True
